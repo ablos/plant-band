@@ -4,7 +4,11 @@ LED::LED(uint16_t count, uint8_t pin) : strip(count, pin, NEO_GRB + NEO_KHZ800) 
 
 void LED::begin() {
     strip.begin();
-    strip.setBrightness(255);
+    setBrightness(255);
+}
+
+void LED::setBrightness(uint8_t brightness) {
+    strip.setBrightness(brightness);
     strip.show();
 }
 
@@ -15,6 +19,13 @@ void LED::setPixelRGB(uint16_t pixelIndex, uint8_t r, uint8_t g, uint8_t b) {
 
 void LED::setColorRGB(uint8_t r, uint8_t g, uint8_t b) {
     for (int i = 0; i < strip.numPixels(); i++) {
+        setPixelRGB(i, r, g, b);
+    }
+    strip.show();
+}
+
+void LED::setPixelRangeRGB(uint16_t lowerPixel, uint16_t upperPixel, uint8_t r, uint8_t g, uint8_t b) {
+    for (int i = lowerPixel; i <= upperPixel; i++) {
         setPixelRGB(i, r, g, b);
     }
     strip.show();

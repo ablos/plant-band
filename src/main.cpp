@@ -11,6 +11,11 @@ void setup() {
   led_strip.setColorRGB(255, 0, 0);
   led_strip.setPixelRGB(0, 0, 255, 0);
   delay(1000);
+  led_strip.setBrightness(100);
+  led_strip.setPixelRangeRGB(10, 25, 0, 0, 255);
+  delay(2000);
+  led_strip.setBrightness(255);
+  delay(3000);
 }
 
 void loop() {
