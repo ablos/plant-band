@@ -1,23 +1,26 @@
 #include <Arduino.h>
-#include <led.h>
+#include <sound.h>
 
-#define LED_PIN 14
-#define PIXEL_COUNT 41
+Sound sound(16, 17);
 
-LED led_strip(PIXEL_COUNT, LED_PIN);
+const uint8_t scale[] = {60, 62, 64, 65, 67, 69, 71}; // C D E F G A B
 
 void setup() {
-  led_strip.begin();
-  led_strip.setColorRGB(255, 0, 0);
-  led_strip.setPixelRGB(0, 0, 255, 0);
-  delay(1000);
-  led_strip.setBrightness(100);
-  led_strip.setPixelRangeRGB(10, 25, 0, 0, 255);
-  delay(2000);
-  led_strip.setBrightness(255);
-  delay(3000);
+  sound.begin();
+}
+
+void testSound(){
+  for (int i = 0; i < 7; i++) {
+    sound.startSound(scale[i], STRINGS);
+    delay(4000);
+    sound.stopSound();
+    delay(50);
+  }
+  delay(500);
 }
 
 void loop() {
-  led_strip.rainbow(5);
+  testSound();
 }
+
+
