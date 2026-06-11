@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include <touch.h>
 
 // static ISR shims, one per possible sensor (max 4)

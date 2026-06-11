@@ -1,4 +1,5 @@
 #pragma once
+#include <Arduino.h>
 #include <Adafruit_MPR121.h>
 #include <Wire.h>
 

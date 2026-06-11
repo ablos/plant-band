@@ -1,38 +1,26 @@
 #include <Arduino.h>
-#include <sound.h>
 #include <Wire.h>
 #include <touch.h>
+#include <led.h>
+#include <display.h>
 
-Sound sound(16, 17);
 
 const uint8_t scale[] = {60, 62, 64, 65, 67, 69, 71}; // C D E F G A B
 TouchSensor touch;
+LED led_strip = LED(41, 14);
+
+Display display = Display(4, 5, 6, 7, 15, 16);
 
 void setup() {
-  sound.begin();
-}
-
-void testSound(){
-  for (int i = 0; i < 7; i++) {
-    sound.startSound(scale[i], STRINGS);
-    delay(4000);
-    sound.stopSound();
-    delay(50);
-  }
-  delay(500);
   Wire.begin();
-  led_strip.begin();
-  touch.begin(0x5A, 4);
 
-  led_strip.setColorRGB(0, 255, 0);
+  led_strip.begin();
+  display.begin();
+  display.println("Hello world!");
 }
 
 void loop() {
-  testSound();
-  touch.poll(
-    [](uint8_t channel) { led_strip.setPixelRGB(channel, 255, 0, 0); },
-    [](uint8_t channel) { led_strip.setPixelRGB(channel, 0, 255, 0); }
-  );
+  led_strip.rainbow(10);
 }
 
 
