@@ -16,15 +16,22 @@ void Display::print(const char* value) {
 }
 
 void Display::println(const char* value) {
-    lcd.setCursor(0, 0);
+    clear();
 
+    // Print value if less than or equal 16
     if (strlen(value) <= 16) {
         lcd.print(value);
-    } else if (strlen(value) <= 32) {
+    }
+    
+    // Wrap to next line if longer
+    else if (strlen(value) <= 32) {
         lcd.print(value);
         lcd.setCursor(0, 1);
         lcd.print(value + 16);
-    } else {
+    }
+    
+    // Wrap and omit last characters with dots
+    else {
         char buf[17];
         strncpy(buf, value, 16);
         buf[16] = '\0';
@@ -35,4 +42,13 @@ void Display::println(const char* value) {
         lcd.print(buf);
         lcd.print("...");
     }
+}
+
+void Display::clear() {
+    // Clear screen
+    lcd.setCursor(0, 0);
+    lcd.print("                ");
+    lcd.setCursor(0, 1);
+    lcd.print("                ");
+    lcd.setCursor(0, 0);
 }

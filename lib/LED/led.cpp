@@ -31,6 +31,16 @@ void LED::setPixelRangeRGB(uint16_t lowerPixel, uint16_t upperPixel, uint8_t r, 
     strip.show();
 }
 
+void LED::setLeaves(const LeafRange *leaves, uint8_t leafCount) {
+    this->leaves = leaves;
+    this->leafCount = leafCount;
+}
+
+void LED::lightLeaf(uint8_t leafIndex, uint8_t r, uint8_t g, uint8_t b) {
+    if (leafIndex >= leafCount) return;
+    setPixelRangeRGB(leaves[leafIndex].start, leaves[leafIndex].end, r, g, b);
+}
+
 void LED::rainbow(int delayMs) {
     for (long hue = 0; hue < 65536; hue += 256) {
         for (int i = 0; i < strip.numPixels(); i++) {

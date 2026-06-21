@@ -8,6 +8,7 @@ class Display {
         void setCursor(uint8_t x, uint8_t y);
         void print(const char* value);
         void println(const char* value);
+        void clear();
 
     private:
         LiquidCrystal lcd;

@@ -26,7 +26,7 @@ bool TouchSensor::begin(uint8_t address, uint8_t irqPin, uint8_t touchThreshold,
     return true;
 }
 
-void TouchSensor::poll(void (*onTouch)(uint8_t), void (*onRelease)(uint8_t)) {
+void TouchSensor::loop() {
     if (!event) return;
     event = false;
 
@@ -35,9 +35,8 @@ void TouchSensor::poll(void (*onTouch)(uint8_t), void (*onRelease)(uint8_t)) {
         bool isNow = touched & (1 << i);
         bool wasOn = lastTouched & (1 << i);
 
-        if (isNow && !wasOn && onTouch) onTouch(i);
-        if (!isNow && wasOn && onRelease)
-            onRelease(i);
+        if (isNow && !wasOn && touchHandler) touchHandler(i);
+        if (!isNow && wasOn && releaseHandler) releaseHandler(i);
     }
 
     lastTouched = touched;
