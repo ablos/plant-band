@@ -15,6 +15,10 @@ const LeafRange leaves[] = {
   {0, 0}, {1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}, {6, 6}, {7, 7}
 };
 
+const LeafRange leavesA[] = {
+  {0, 1}, {2, 3}, {4, 5}, {6, 6}, {7, 8}, {9, 9}, {10, 11}, {12, 12}
+};
+
 struct RGB { uint8_t r, g, b; };
 
 // one color per leaf/note, shared by all three plants in freeplay
@@ -47,7 +51,7 @@ Display display = Display(4, 5, 6, 7, 15, 16);
 Knob knob;
 Sound synth;
 
-LED led_a = LED(8, 11);
+LED led_a = LED(13, 11);
 LED led_b = LED(8, 12);
 LED led_c = LED(8, 13);
 
@@ -95,7 +99,7 @@ void setup() {
   led_b.begin();
   led_c.begin();
 
-  led_a.setLeaves(leaves, 8);
+  led_a.setLeaves(leavesA, 8);
   led_b.setLeaves(leaves, 8);
   led_c.setLeaves(leaves, 8);
   showFreeplayIdle();
@@ -134,9 +138,9 @@ void setup() {
   });
 
   // Start touch
-  touch_a.begin(0x5A, 21);
-  touch_b.begin(0x5B, 2);
-  touch_c.begin(0x5C, 1);
+  touch_a.begin(0x5A, 21, 20, 14);
+  touch_b.begin(0x5B, 2, 20, 14);
+  touch_c.begin(0x5C, 1, 20, 14);
 
   touch_a.onTouch(handleTouchA);
   touch_a.onRelease(handleReleaseA);
