@@ -10,7 +10,6 @@
 const uint8_t scale[] = {60, 62, 64, 65, 67, 69, 71, 72};
 const uint8_t drumNotes[] = {36, 38, 39, 42, 46, 45, 49, 51};
 
-// each plant gets its own 8-pixel debug strip for now, one leaf per pixel
 const LeafRange leaves[] = {
   {0, 0}, {1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}, {6, 6}, {7, 7}
 };
@@ -59,15 +58,19 @@ TouchSensor touch_a;
 TouchSensor touch_b;
 TouchSensor touch_c;
 
+#define MENU_IDLE_TIMEOUT_MS 4000 // revert to freeplay after this long without knob activity in song/instrument select
+
 int8_t selectedSong = 0;
 bool songMode = false;
-bool selectingPlayers = false;
-uint8_t playerCount = 3; // how many plants take part in the song: 1 = melody only, 2 = +harmony, 3 = +drum
+bool browsingMenu = false; // true while the song/instrument select screens are showing
+bool selectingInstruments = false;
+uint8_t instrumentCount = 3; // how many plants take part in the song: 1 = melody only, 2 = +harmony, 3 = +drum
+unsigned long lastMenuActivity = 0;
 uint8_t songStep = 0;
 bool stepMelodyDone = false, stepHarmonyDone = false, stepDrumDone = false;
 
-bool harmonyActive() { return playerCount >= 2; }
-bool drumActive()    { return playerCount >= 3; }
+bool harmonyActive() { return instrumentCount >= 2; }
+bool drumActive()    { return instrumentCount >= 3; }
 
 void playStartupChime();
 void handleTouchA(uint8_t channel);
@@ -88,7 +91,8 @@ void showFreeplayIdle();
 void showFreeplayStatus();
 void showSongSelect();
 void showSongProgress();
-void showPlayerSelect();
+void showInstrumentSelect();
+void enterMenu();
 
 void setup() {
   // Start i2c
@@ -118,23 +122,38 @@ void setup() {
   // Start knob
   knob.begin(ENCODER_A_PIN, ENCODER_B_PIN, ENCODER_BTN_PIN);
   knob.onRotate([](int delta) {
-    if (selectingPlayers) {
-      playerCount = ((playerCount - 1 + (delta > 0 ? 1 : -1) + 3) % 3) + 1;
-      showPlayerSelect();
+    lastMenuActivity = millis();
+    if (selectingInstruments) {
+      instrumentCount = ((instrumentCount - 1 + (delta > 0 ? 1 : -1) + 3) % 3) + 1;
+      showInstrumentSelect();
       return;
     }
     stopSong();
-    selectedSong = (selectedSong + songCount + (delta > 0 ? 1 : -1)) % songCount;
+    bool wasBrowsing = browsingMenu;
+    enterMenu();
+    if (wasBrowsing) {
+      selectedSong = (selectedSong + songCount + (delta > 0 ? 1 : -1)) % songCount;
+    }
     showSongSelect();
   });
   knob.onPress([]() {
-    if (selectingPlayers) {
-      selectingPlayers = false;
-      startSong();
-    } else {
-      selectingPlayers = true;
-      showPlayerSelect();
+    lastMenuActivity = millis();
+    if (songMode) {
+      stopSong();
+      browsingMenu = false;
+      selectingInstruments = false;
+      return;
     }
+    if (selectingInstruments) {
+      selectingInstruments = false;
+      browsingMenu = false;
+      startSong();
+      return;
+    }
+    enterMenu();
+    selectingInstruments = true;
+    instrumentCount = 3;
+    showInstrumentSelect();
   });
 
   // Start touch
@@ -160,6 +179,12 @@ void loop() {
   touch_a.loop();
   touch_b.loop();
   touch_c.loop();
+
+  if (browsingMenu && millis() - lastMenuActivity > MENU_IDLE_TIMEOUT_MS) {
+    browsingMenu = false;
+    selectingInstruments = false;
+    showFreeplayStatus();
+  }
 }
 
 void handleTouchA(uint8_t channel) {
@@ -362,14 +387,21 @@ void showSongProgress() {
   display.println(full);
 }
 
-void showPlayerSelect() {
+void showInstrumentSelect() {
   char label[17];
-  snprintf(label, sizeof(label), "Players: %d", playerCount);
+  snprintf(label, sizeof(label), "Instruments: %d", instrumentCount);
   char line1[17];
   snprintf(line1, sizeof(line1), "%-16s", label);
   char full[48];
   snprintf(full, sizeof(full), "%s%s", line1, songs[selectedSong].name);
   display.println(full);
+}
+
+// enters the song/instrument select flow fresh: resets to song 1 so the scroll never remembers last time
+void enterMenu() {
+  if (browsingMenu) return;
+  browsingMenu = true;
+  selectedSong = 0;
 }
 
 void playStartupChime() {
