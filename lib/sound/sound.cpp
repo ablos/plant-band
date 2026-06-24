@@ -3,6 +3,9 @@
 void Sound::begin(int txPin) {
     synth.begin(&Serial2, UNIT_SYNTH_BAUD, -1, txPin);
     synth.setMasterVolume(127);
+    for (uint8_t channel = 0; channel < 16; channel++) {
+        synth.setVolume(channel, 127);
+    }
 }
 
 void Sound::setInstrument(uint8_t channel, Instrument instrument) {

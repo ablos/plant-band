@@ -18,6 +18,10 @@ const LeafRange leavesA[] = {
   {0, 1}, {2, 3}, {4, 5}, {6, 6}, {7, 8}, {9, 9}, {10, 11}, {12, 12}
 };
 
+const LeafRange leavesB[] = {
+  {14, 15}, {10, 11},  {12, 13}, {8, 9}, {6, 7}, {4, 5}, {2, 3}, {0, 1}
+};
+
 struct RGB { uint8_t r, g, b; };
 
 // one color per leaf/note, shared by all three plants in freeplay
@@ -33,9 +37,10 @@ const RGB noteColors[8] = {
 };
 
 #define IDLE_DIM_DIV 8 // freeplay idle brightness = touch brightness / this
+#define NEXT_NOTE_DIM_DIV 24 // song-mode "next note" preview brightness = touch brightness / this
 
-RGB dimColor(RGB c) {
-  return { (uint8_t)(c.r / IDLE_DIM_DIV), (uint8_t)(c.g / IDLE_DIM_DIV), (uint8_t)(c.b / IDLE_DIM_DIV) };
+RGB dimColor(RGB c, uint8_t div = IDLE_DIM_DIV) {
+  return { (uint8_t)(c.r / div), (uint8_t)(c.g / div), (uint8_t)(c.b / div) };
 }
 
 #define ENCODER_A_PIN 18
@@ -51,7 +56,7 @@ Knob knob;
 Sound synth;
 
 LED led_a = LED(13, 11);
-LED led_b = LED(8, 12);
+LED led_b = LED(16, 12);
 LED led_c = LED(8, 13);
 
 TouchSensor touch_a;
@@ -104,7 +109,7 @@ void setup() {
   led_c.begin();
 
   led_a.setLeaves(leavesA, 8);
-  led_b.setLeaves(leaves, 8);
+  led_b.setLeaves(leavesB, 8);
   led_c.setLeaves(leaves, 8);
   showFreeplayIdle();
 
@@ -158,7 +163,7 @@ void setup() {
 
   // Start touch
   touch_a.begin(0x5A, 21, 20, 14);
-  touch_b.begin(0x5B, 2, 20, 14);
+  touch_b.begin(0x5B, 2, 40, 20);
   touch_c.begin(0x5C, 1, 20, 14);
 
   touch_a.onTouch(handleTouchA);
@@ -291,7 +296,7 @@ void refreshPlantLed(LED &led, uint8_t current, uint8_t next, bool done) {
   }
 
   if (next == REST) return;
-  RGB preview = dimColor({255, 220, 0});
+  RGB preview = dimColor({255, 220, 0}, NEXT_NOTE_DIM_DIV);
   if (next == current) {
     if (done) led.lightLeaf(next, preview.r, preview.g, preview.b);
   } else {

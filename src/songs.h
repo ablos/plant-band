@@ -16,33 +16,32 @@ struct Song {
 };
 
 // Twinkle Twinkle Little Star: 6 phrases of 7 notes each.
-// One harmony chord and one drum hit on the first note of every phrase,
-// drums cycling through kick/snare/hihat/crash instead of repeating one pad.
+// All three plants play the same note on every step (unison).
 const SongStep twinkleSteps[] = {
   // Twinkle twinkle little star
-  {0, 0, 0}, {0, REST, REST}, {4, REST, REST}, {4, REST, REST}, {5, REST, REST}, {5, REST, REST}, {4, REST, REST},
+  {0, 0, 0}, {0, 0, 0}, {4, 4, 4}, {4, 4, 4}, {5, 5, 5}, {5, 5, 5}, {4, 4, 4},
   // How I wonder what you are
-  {3, 3, 1}, {3, REST, REST}, {2, REST, REST}, {2, REST, REST}, {1, REST, REST}, {1, REST, REST}, {0, REST, REST},
+  {3, 3, 3}, {3, 3, 3}, {2, 2, 2}, {2, 2, 2}, {1, 1, 1}, {1, 1, 1}, {0, 0, 0},
   // Up above the world so high
-  {4, 0, 3}, {4, REST, REST}, {3, REST, REST}, {3, REST, REST}, {2, REST, REST}, {2, REST, REST}, {1, REST, REST},
+  {4, 4, 4}, {4, 4, 4}, {3, 3, 3}, {3, 3, 3}, {2, 2, 2}, {2, 2, 2}, {1, 1, 1},
   // Like a diamond in the sky
-  {4, 0, 4}, {4, REST, REST}, {3, REST, REST}, {3, REST, REST}, {2, REST, REST}, {2, REST, REST}, {1, REST, REST},
+  {4, 4, 4}, {4, 4, 4}, {3, 3, 3}, {3, 3, 3}, {2, 2, 2}, {2, 2, 2}, {1, 1, 1},
   // Twinkle twinkle little star
-  {0, 0, 0}, {0, REST, REST}, {4, REST, REST}, {4, REST, REST}, {5, REST, REST}, {5, REST, REST}, {4, REST, REST},
+  {0, 0, 0}, {0, 0, 0}, {4, 4, 4}, {4, 4, 4}, {5, 5, 5}, {5, 5, 5}, {4, 4, 4},
   // How I wonder what you are
-  {3, 3, 6}, {3, REST, REST}, {2, REST, REST}, {2, REST, REST}, {1, REST, REST}, {1, REST, REST}, {0, REST, REST},
+  {3, 3, 3}, {3, 3, 3}, {2, 2, 2}, {2, 2, 2}, {1, 1, 1}, {1, 1, 1}, {0, 0, 0},
 };
 
-// Frere Jacques: melody only, no harmony/drum part
+// Frere Jacques: all three plants play the same note on every step (unison)
 const SongStep frereSteps[] = {
-  {0, REST, REST}, {1, REST, REST}, {2, REST, REST}, {0, REST, REST},
-  {0, REST, REST}, {1, REST, REST}, {2, REST, REST}, {0, REST, REST},
-  {2, REST, REST}, {3, REST, REST}, {4, REST, REST},
-  {2, REST, REST}, {3, REST, REST}, {4, REST, REST},
-  {4, REST, REST}, {5, REST, REST}, {4, REST, REST}, {3, REST, REST}, {2, REST, REST}, {0, REST, REST},
-  {4, REST, REST}, {5, REST, REST}, {4, REST, REST}, {3, REST, REST}, {2, REST, REST}, {0, REST, REST},
-  {0, REST, REST}, {4, REST, REST}, {0, REST, REST},
-  {0, REST, REST}, {4, REST, REST}, {0, REST, REST},
+  {0, 0, 0}, {1, 1, 1}, {2, 2, 2}, {0, 0, 0},
+  {0, 0, 0}, {1, 1, 1}, {2, 2, 2}, {0, 0, 0},
+  {2, 2, 2}, {3, 3, 3}, {4, 4, 4},
+  {2, 2, 2}, {3, 3, 3}, {4, 4, 4},
+  {4, 4, 4}, {5, 5, 5}, {4, 4, 4}, {3, 3, 3}, {2, 2, 2}, {0, 0, 0},
+  {4, 4, 4}, {5, 5, 5}, {4, 4, 4}, {3, 3, 3}, {2, 2, 2}, {0, 0, 0},
+  {0, 0, 0}, {4, 4, 4}, {0, 0, 0},
+  {0, 0, 0}, {4, 4, 4}, {0, 0, 0},
 };
 
 const Song songs[] = {
